@@ -29,7 +29,7 @@ int main()
 {
     int vetor[10]={-8,-5,1,4,14,21,23,54,67,90};
     
-    printf("Resultado: %i\n",buscaBinariaRecursiva(vetor,0,9,20));
+    printf("Resultado: %i\n",buscaBinariaRecursiva(vetor,0,10,20));
     printf("Hello World");
 
     return 0;
