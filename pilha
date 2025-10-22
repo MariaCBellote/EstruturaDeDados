@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include<stdlib.h>
 
@@ -40,15 +41,17 @@ int push(Lista* lista, int x){
   return 1;
 }
 
+
 int pop (Lista* lista){
  if(lista==NULL) {return 0;}
- cel* aux = (cel*) malloc(sizeof(cel));
  
- if(aux==NULL){return 0;}
- 
- aux->seg= *lista;
- *lista=aux;
- 
+ *lista = (*lista)->seg;
+ /* 
+ cel *aux=*lista; cria um auxiliar para armazenar o ponteiro q aponta para o primeiro elemnto da lista
+ *lista=aux->seg; coloca esse ponteiro q aponta para o 1 elemnto como sendo o proximo endereço de elemento
+  free(aux);  para liberar espaço de aux
+ */
+
 }
 
 void imprimirLista(Lista* l){
@@ -65,7 +68,7 @@ void imprimirLista(Lista* l){
     
 }
     
-    void busarLista(Lista* l, int x){
+void busarLista(Lista* l, int x){
       if(l==NULL){printf("Lista vazia\n"); return;}  
       cel *temp;
       temp=*l;
@@ -80,9 +83,22 @@ void imprimirLista(Lista* l){
      
     }
 
+void mostrarTopo(Lista* lista ){
+    printf("%p | %d\n", *lista, (*lista)->conteudo);
+}
+
+int isEmpty(Lista *l){
+    if ( l==NULL || *l==NULL){
+        printf("Lista vazia.\n");
+        return 1;
+      
+    }
+    return 0;
+}
 
 int main(void) {
   Lista *lst;
+  Lista *l=NULL;
   lst = cria_lista();
   push(lst, 1);
   push(lst, 2);
@@ -93,7 +109,10 @@ int main(void) {
   printf("\n");
   pop(lst);
  imprimirLista(lst);
-
-
+ printf("\n");
+ mostrarTopo(lst);
+ isEmpty(lst);
+ isEmpty(l);
+ 
   return 0;
 }
