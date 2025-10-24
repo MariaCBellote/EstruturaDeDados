@@ -26,29 +26,27 @@ int push(Lista* lista, int x){
   cel* aux = (cel*) malloc(sizeof(cel));
   if(aux==NULL){return 0;}
   aux->conteudo = x;
-  aux->seg = *lista;
+  aux->seg = *lista;    // quando uma lista esta vazia já é null
   
-  if((*lista)==NULL){ 
-      aux->seg=NULL;
-      *lista = aux;
-      
-  }
-  else{
-      //o ponteiro de lista se torna o auxiliar 
+    //o ponteiro de lista se torna o auxiliar 
     *lista=aux;
     
-  }
+  
   return 1;
 }
 
 
 int pop (Lista* lista){
  if(lista==NULL) {return 0;}
- 
+ int retorno=(*lista)->conteudo;
  *lista = (*lista)->seg;
+ return retorno;
+ 
  /* 
  cel *aux=*lista; cria um auxiliar para armazenar o ponteiro q aponta para o primeiro elemnto da lista
+ 
  *lista=aux->seg; coloca esse ponteiro q aponta para o 1 elemnto como sendo o proximo endereço de elemento
+ 
   free(aux);  para liberar espaço de aux
  */
 
@@ -60,11 +58,13 @@ void imprimirLista(Lista* l){
         
         cel *temp;
         temp=*l;
+         printf("TOPO PILHA\n");
         while(temp != NULL){
             printf("%p e %d\n",&temp->conteudo,temp->conteudo); //&temp->conteudo acessa o endereço de conteudo e &temp de temp (não mua só substitui valores)
             temp = temp->seg;
         }
-    }
+         printf("BASE PILHA\n");
+    }     
     
 }
     
@@ -72,11 +72,13 @@ void busarLista(Lista* l, int x){
       if(l==NULL){printf("Lista vazia\n"); return;}  
       cel *temp;
       temp=*l;
+    
       while(temp != NULL){
           if(temp->conteudo==x){
               printf("%d, endereço: %p\n",temp->conteudo,temp->seg);
              return;
           }
+
           temp=temp->seg;
       }
       printf("Não encontrado.\n");
@@ -85,6 +87,14 @@ void busarLista(Lista* l, int x){
 
 void mostrarTopo(Lista* lista ){
     printf("%p | %d\n", *lista, (*lista)->conteudo);
+}
+
+//jeito do cássio
+int consulta_topo(Lista *l){
+    if(l==NULL || (*l)==NULL){
+        return -1;
+    }
+    return (*l)->conteudo;
 }
 
 int isEmpty(Lista *l){
@@ -96,6 +106,18 @@ int isEmpty(Lista *l){
     return 0;
 }
 
+void liberar_pilha(Lista *l){
+    if(l!=NULL){
+        cel *no;
+        while((*l)!=NULL){
+            no=*l;
+            *l=(*l)->seg;
+            free(no);
+        }
+    }
+    
+    
+}
 int main(void) {
   Lista *lst;
   Lista *l=NULL;
@@ -107,12 +129,12 @@ int main(void) {
   push(lst, 5);
   imprimirLista(lst);
   printf("\n");
-  pop(lst);
- imprimirLista(lst);
- printf("\n");
- mostrarTopo(lst);
- isEmpty(lst);
- isEmpty(l);
+  printf("%d\n", pop(lst));
+  imprimirLista(lst);
+  printf("\n");
+  mostrarTopo(lst);
+  isEmpty(lst);
+  isEmpty(l);
  
   return 0;
 }
