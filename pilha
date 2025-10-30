@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include<stdlib.h>
 
@@ -10,131 +9,85 @@ typedef struct cel{
   struct cel *seg;
 }cel;
 
-typedef struct cel* Lista;
+typedef struct fila{
+    int quantidade;
+    int maximo;
+    struct cel *inicio;
+    struct cel *fim;
+}Fila;
 
 
-Lista* cria_lista(){
-  Lista *li = (Lista*) malloc(sizeof(Lista));
-  if(li != NULL){
-    *li=NULL;
-  }
-  return li;
+Fila* cria_fila(){
+    Fila* fi= (Fila*)malloc(sizeof(Fila));
+    if(fi!=NULL){
+       fi->quantidade = 0;
+       fi->maximo=6;
+       fi->inicio=NULL;
+       fi->fim=NULL;
+    }
 }
 
-int push(Lista* lista, int x){
-  if(lista==NULL) {return 0;}
+int enqueue(Fila* fi, int x){
+  if(fi==NULL || fi->quantidade >= fi->maximo) return -1;
+
   cel* aux = (cel*) malloc(sizeof(cel));
-  if(aux==NULL){return 0;}
+  if(aux == NULL) return -1;
+
   aux->conteudo = x;
-  aux->seg = *lista;    // quando uma lista esta vazia já é null
-  
-    //o ponteiro de lista se torna o auxiliar 
-    *lista=aux;
-    
-  
+  aux->seg = NULL;
+
+  if(fi->quantidade == 0){
+      fi->inicio = aux;
+      fi->fim = aux;
+  } else {
+      fi->fim->seg = aux;
+      fi->fim = aux;
+  }
+
+  fi->quantidade++;
   return 1;
 }
 
 
-int pop (Lista* lista){
- if(lista==NULL) {return 0;}
- int retorno=(*lista)->conteudo;
- *lista = (*lista)->seg;
- return retorno;
+int dequeue (Fila* fi){
+ if(fi==NULL || fi->quantidade<=0) {return 0;}
  
- /* 
- cel *aux=*lista; cria um auxiliar para armazenar o ponteiro q aponta para o primeiro elemnto da lista
+fi->inicio = fi->inicio->seg;
+ fi->quantidade--;
  
- *lista=aux->seg; coloca esse ponteiro q aponta para o 1 elemnto como sendo o proximo endereço de elemento
- 
-  free(aux);  para liberar espaço de aux
- */
 
 }
 
-void imprimirLista(Lista* l){
-    if(l==NULL){printf("Lista vazia...");}
-    else{
-        
-        cel *temp;
-        temp=*l;
-         printf("TOPO PILHA\n");
-        while(temp != NULL){
-            printf("%p e %d\n",&temp->conteudo,temp->conteudo); //&temp->conteudo acessa o endereço de conteudo e &temp de temp (não mua só substitui valores)
-            temp = temp->seg;
-        }
-         printf("BASE PILHA\n");
-    }     
-    
-}
-    
-void busarLista(Lista* l, int x){
-      if(l==NULL){printf("Lista vazia\n"); return;}  
-      cel *temp;
-      temp=*l;
-    
-      while(temp != NULL){
-          if(temp->conteudo==x){
-              printf("%d, endereço: %p\n",temp->conteudo,temp->seg);
-             return;
-          }
-
-          temp=temp->seg;
-      }
-      printf("Não encontrado.\n");
-     
-    }
-
-void mostrarTopo(Lista* lista ){
-    printf("%p | %d\n", *lista, (*lista)->conteudo);
+void imprimirFila(Fila* fi){
+    cel* temp;
+    temp= fi->inicio;
+   while(fi->inicio->seg!=NULL){
+       printf("%d\n",temp->conteudo );
+      temp=temp->seg;
+   }
 }
 
-//jeito do cássio
-int consulta_topo(Lista *l){
-    if(l==NULL || (*l)==NULL){
-        return -1;
-    }
-    return (*l)->conteudo;
-}
 
-int isEmpty(Lista *l){
-    if ( l==NULL || *l==NULL){
-        printf("Lista vazia.\n");
-        return 1;
-      
-    }
-    return 0;
-}
 
-void liberar_pilha(Lista *l){
-    if(l!=NULL){
-        cel *no;
-        while((*l)!=NULL){
-            no=*l;
-            *l=(*l)->seg;
-            free(no);
-        }
-    }
-    
-    
-}
+
+
 int main(void) {
-  Lista *lst;
-  Lista *l=NULL;
-  lst = cria_lista();
-  push(lst, 1);
-  push(lst, 2);
-  push(lst, 3);
-  push(lst, 4);
-  push(lst, 5);
-  imprimirLista(lst);
+  Fila *lst;
+  Fila *l=NULL;
+  lst = cria_fila();
+ enqueue(lst, 1);
+ enqueue(lst, 2);
+ enqueue(lst, 3);
+ enqueue(lst, 4);
+ enqueue(lst, 5);
+ imprimirFila(lst);
   printf("\n");
-  printf("%d\n", pop(lst));
-  imprimirLista(lst);
-  printf("\n");
-  mostrarTopo(lst);
-  isEmpty(lst);
-  isEmpty(l);
+  dequeue (lst);
+imprimirFila(lst);
+ printf("\n");
+
+// isEmpty(lst);
+ //isEmpty(l);
  
   return 0;
 }
